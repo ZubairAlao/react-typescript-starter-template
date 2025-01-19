@@ -91,22 +91,22 @@ const Header = () => {
           </div>
           {/* toggle button */}
           {toggle ? (
-                  <button
-                    aria-label="Toggle navigation menu"
-                    className="relative z-30 cursor-pointer object-contain text-black"
-                    onClick={handleToggleButton}
-                  >
-                    <IoClose size={32} className="" />
-                  </button>
-                ) : (
-                  <button
-                    aria-label="Toggle navigation menu"
-                    className="relative z-30 cursor-pointer object-contain text-black lg:hidden"
-                    onClick={handleToggleButton}
-                  >
-                    <MenuIcon className="h-fit w-[32px]" />
-                  </button>
-                )}
+            <button
+              aria-label="Toggle navigation menu"
+              className="relative z-30 cursor-pointer object-contain text-black"
+              onClick={handleToggleButton}
+            >
+              <IoClose size={32} className="" />
+            </button>
+          ) : (
+            <button
+              aria-label="Toggle navigation menu"
+              className="relative z-30 cursor-pointer object-contain text-black lg:hidden"
+              onClick={handleToggleButton}
+            >
+              <MenuIcon className="h-fit w-[32px]" />
+            </button>
+          )}
           <DesktopNav />
       </div>
     </header>
