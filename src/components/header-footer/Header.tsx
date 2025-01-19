@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Logo from "../Logo";
-import MobileNav, { CancelIcon } from "./MobileNav";
-import { MenuIcon, Phone } from "lucide-react";
+import MobileNav from "./MobileNav";
+import { IoClose } from "react-icons/io5";
+import { MenuIcon } from "lucide-react";
 import DesktopNav from "./DesktopNav";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import { Link, useLocation } from "react-router";
-i
+
 
 const Header = () => {
   const [toggle, setToggle] = useState(false);
@@ -15,26 +15,29 @@ const Header = () => {
     setToggle(!toggle);
   };
 
-  const menuRef = useRef(null);
+  
 
   // close the menu if click outside the box
   const closeMenu = () => {
     setToggle(false);
   };
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        closeMenu();
-      }
-    };
-    // Add event listener to detect outside clicks
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  /*-------------------------------------------------------------------- */
+    // clicking outside the mobile menu box will close the mobile menu
+    const menuRef = useRef<HTMLDivElement | null>(null);
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent): void => {
+          if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+            closeMenu();
+          }
+        };
+        // Add event listener to detect outside clicks
+        document.addEventListener("mousedown", handleClickOutside);
+    
+        // Clean up the event listener on component unmount
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
 
   // Change 50 to the scroll position where you want the header to change
   useEffect(() => {
@@ -68,16 +71,14 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, [toggle]);
 
-  const location = useLocation();
-  const isHomePage = location.pathname === "/"; //for home nav height adjustment only and opacity adjustment
+
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full text-white shadow-lg transition-all duration-500 max-lg:py-4`}>
+      className={`fixed top-0 z-50 w-full text-white shadow-lg transition-all duration-500 max-lg:py-4 py-6`}>
       <div className='flex justify-between items-center container'>
-        <div className="flex flex-col gap-4 justify-between items-start">
+        <div className="flex gap-4 justify-between items-start">
           <Logo />
-          <DesktopNav marginLeft={"-left-10"} />
         </div>
 
           {/* mobile nav bar */}
@@ -88,134 +89,25 @@ const Header = () => {
               closeMenu={closeMenu}
             />
           </div>
-
-
-          {/* phone number toggle  and profile and free quote */}
-          <div className="flex flex-col max-lg:flex-row justify-between items-center gap-4">
-            <div className="flex items-center justify-center gap-4">
-              <Phone />
-              <a href="tel:4234028356" className="font-semibold">
-                (423) 402-8356
-              </a>
-            </div>
-
-            <div className="flex justify-center items-center gap-4">
-              {/* toggle button */}
-              {toggle ? (
-                <button
-                  aria-label="Toggle navigation menu"
-                  className="relative z-30 cursor-pointer object-contain"
-                  onClick={handleToggleButton}
-                >
-                  <CancelIcon size={32} color="white" />
-                </button>
-              ) : (
-                <button
-                  aria-label="Toggle navigation menu"
-                  className="relative z-30 cursor-pointer object-contain text-white lg:hidden"
-                  onClick={handleToggleButton}
-                >
-                  <MenuIcon className="h-fit w-[32px]" />
-                </button>
-              )}
-              <div className="flex items-center justify-center gap-4 max-lg:hidden">
-                <Popover>
-                  <PopoverTrigger className="outline-none">
-                    <ProfileCircle
-                      className="~size-7/8"
-                      variant="Bold"
-                      color="white"
-                    />
-                  </PopoverTrigger>
-
-                  <PopoverContent className="flex w-max flex-col px-1 pb-3 pt-2 text-center text-sm font-medium">
-                    {access ? (
-                      <>
-                        <Close
-                          className="px-8 py-1.5 outline-none transition duration-150 hover:bg-gray-100"
-                          asChild
-                        >
-                          <Link
-                            className="block w-full"
-                            to="/account/profile/account-info"
-                          >
-                            Profile
-                          </Link>
-                        </Close>
-                        <Close
-                          className="px-8 py-1.5 outline-none transition duration-150 hover:bg-gray-100"
-                          asChild
-                        >
-                          <Link className="block w-full" to="/account/quotes/active">
-                            Active Quotes
-                          </Link>
-                        </Close>
-                        {user && user.is_admin && (
-                          <>
-                            <Close
-                              className="px-8 py-1.5 outline-none transition duration-150 hover:bg-gray-100"
-                              asChild
-                            >
-                              <Link className="block w-full" to="/account/admin">
-                                Admin Table
-                              </Link>
-                            </Close>
-                            <Close
-                              className="px-8 py-1.5 outline-none transition duration-150 hover:bg-gray-100"
-                              asChild
-                            >
-                              <Link className="block w-full" to="/account/contacts">
-                                Contacts
-                              </Link>
-                            </Close>
-                            <Close
-                              className="px-8 py-1.5 outline-none transition duration-150 hover:bg-gray-100"
-                              asChild
-                            >
-                              <Link
-                                className="block w-full"
-                                to="/account/subscribers"
-                              >
-                                Subscribers
-                              </Link>
-                            </Close>
-                          </>
-                        )}
-                        <Close
-                          className="px-8 py-1.5 outline-none transition duration-150 hover:bg-gray-100"
-                          onClick={() => dispatch({ type: "LOGOUT" })}
-                        >
-                          Logout
-                        </Close>
-                      </>
-                    ) : (
-                      <>
-                        <Close
-                          className="px-8 py-1.5 outline-none transition duration-150 hover:bg-gray-100"
-                          asChild
-                        >
-                          <Link className="block w-full" to="/account/login">
-                            Login
-                          </Link>
-                        </Close>
-                        <Close
-                          className="px-8 py-1.5 outline-none transition duration-150 hover:bg-gray-100"
-                          asChild
-                        >
-                          <Link className="block w-full" to="/account/sign-up">
-                            Sign Up
-                          </Link>
-                        </Close>
-                      </>
-                    )}
-                  </PopoverContent>
-                </Popover>
-                <div className="">
-                  <QuoteDialogBox fullwidth={false} />
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* toggle button */}
+          {toggle ? (
+                  <button
+                    aria-label="Toggle navigation menu"
+                    className="relative z-30 cursor-pointer object-contain text-black"
+                    onClick={handleToggleButton}
+                  >
+                    <IoClose size={32} className="" />
+                  </button>
+                ) : (
+                  <button
+                    aria-label="Toggle navigation menu"
+                    className="relative z-30 cursor-pointer object-contain text-black lg:hidden"
+                    onClick={handleToggleButton}
+                  >
+                    <MenuIcon className="h-fit w-[32px]" />
+                  </button>
+                )}
+          <DesktopNav />
       </div>
     </header>
   );
