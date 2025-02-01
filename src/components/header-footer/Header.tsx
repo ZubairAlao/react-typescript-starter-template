@@ -4,12 +4,11 @@ import MobileNav from "./MobileNav";
 import { IoClose } from "react-icons/io5";
 import { MenuIcon } from "lucide-react";
 import DesktopNav from "./DesktopNav";
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock"; 
 
 
 const Header = () => {
   const [toggle, setToggle] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false); //scrolling header from y0 change from transparent
 
   const handleToggleButton = () => {
     setToggle(!toggle);
@@ -39,15 +38,6 @@ const Header = () => {
         };
       }, []);
 
-  // Change 50 to the scroll position where you want the header to change
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Manage body scroll lock on toggle
   useEffect(() => {
@@ -75,7 +65,7 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full text-white shadow-lg transition-all duration-500 max-lg:py-4 py-6`}>
+      className={`fixed top-0 z-50 w-full text-black shadow-lg transition-all duration-500 max-lg:py-4 py-6 text-base`}>
       <div className='flex justify-between items-center container'>
         <div className="flex gap-4 justify-between items-start">
           <Logo />
@@ -86,9 +76,9 @@ const Header = () => {
             <MobileNav
               toggle={toggle}
               handleToggleButton={handleToggleButton}
-              closeMenu={closeMenu}
             />
           </div>
+          <DesktopNav />
           {/* toggle button */}
           {toggle ? (
             <button
@@ -107,7 +97,6 @@ const Header = () => {
               <MenuIcon className="h-fit w-[32px]" />
             </button>
           )}
-          <DesktopNav />
       </div>
     </header>
   );
